@@ -1,94 +1,78 @@
-import React from "react";
-import reactLogo from "../assets/react.svg";
 import Button from "./Button";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHouse } from "@fortawesome/free-solid-svg-icons";
 
 function TopNavigation() {
   const isLoggedIn = false;
 
-  return !isLoggedIn ? (
+  return (
     <nav
       style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
         background: "#fff",
         boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
         height: "64px",
+        width: "100%",
       }}
     >
-      {/* Left: React Logo */}
-      <div style={{ display: "flex", alignItems: "center", flex: 1 }}>
-        {/* Home Button */}
-        <Button
-          label=""
-          iconPath={reactLogo}
-          imgStyle={{ height: "40px" }}
-          onClick={() => (window.location.href = "/")}
-        />
-      </div>
-      {/* Center: Order History Button */}
-      <div style={{ display: "flex", justifyContent: "center", flex: 1 }}>
-        <Button
-          label="Order History"
-          onClick={() => (window.location.href = "/order-history")}
-        />
-      </div>
-      {/* Right: Sign Up and Login Buttons */}
       <div
         style={{
           display: "flex",
-          gap: "16px",
           alignItems: "center",
-          justifyContent: "flex-end",
-          flex: 1,
+          justifyContent: "space-between",
+          paddingLeft: "16px",
+          paddingRight: "16px",
+          height: "100%",
+          maxWidth: "1200px",
+          margin: "0 auto",
         }}
       >
-        <Button
-          label="Sign Up"
-          onClick={() => (window.location.href = "/sign-up")}
-        />
-        <Button
-          label="Login"
-          onClick={() => (window.location.href = "/login")}
-        />
-      </div>
-    </nav>
-  ) : (
-    <nav
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        background: "#fff",
-        boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
-        height: "64px",
-      }}
-    >
-      {/* Left: Logo */}
-      <div style={{ display: "flex", alignItems: "center", flex: 1 }}>
-        {/* Home Button */}
-        <Button
-          label=""
-          iconPath={logo}
-          imgStyle={{ height: "40px" }}
-          onClick={() => (window.location.href = "/")}
-        />
-      </div>
-      {/* Center: Order History Button */}
-      <div style={{ display: "flex", justifyContent: "center", flex: 1 }}>
-        <Button
-          label="Order History"
-          onClick={() => (window.location.href = "/order-history")}
-        />
-      </div>
-      {/* Right: Sign Up and Login Buttons */}
-      <div style={{ display: "flex", justifyContent: "flex-end", flex: 1 }}>
-        <Button
-          label="Logout"
-          onClick={() => {
-            /* Implement logout logic here */
+        {/* Left: React Logo */}
+        <div style={{ display: "flex", alignItems: "center", flex: 1 }}>
+          <Button
+            label=""
+            onClick={() => (window.location.href = "/")}
+            iconElement={<FontAwesomeIcon icon={faHouse} />}
+          />
+        </div>
+
+        {/* Center: Order History Button */}
+        <div style={{ display: "flex", justifyContent: "center", flex: 1 }}>
+          <Button
+            label="Order History"
+            onClick={() => (window.location.href = "/order-history")}
+          />
+        </div>
+
+        {/* Right: Auth Buttons */}
+        <div
+          style={{
+            display: "flex",
+            gap: "16px",
+            alignItems: "center",
+            justifyContent: "flex-end",
+            flex: 1,
           }}
-        />
+        >
+          {!isLoggedIn ? (
+            <>
+              <Button
+                label="Sign Up"
+                onClick={() => (window.location.href = "/sign-up")}
+              />
+              <Button
+                label="Login"
+                onClick={() => (window.location.href = "/login")}
+              />
+            </>
+          ) : (
+            <Button
+              label="Logout"
+              onClick={() => {
+                /* logout logic here */
+              }}
+            />
+          )}
+        </div>
       </div>
     </nav>
   );

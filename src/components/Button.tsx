@@ -1,23 +1,19 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faReact } from "@fortawesome/free-brands-svg-icons";
 
 // Define types for the Button props
 interface ButtonProps {
   label: string; // Button label should be a string
   onClick?: () => void; // onClick is an optional function that returns nothing
   to?: string; // 'to' is an optional string, used for navigation
-  iconPath?: string; // Optional path for image icon,
-  imgStyle?: React.CSSProperties; // Optional image styles (e.g., width, height)
+  iconElement?: React.ReactNode; // Accepts full JSX element so if you need to style the React icon you can do it outside in the parent component
 }
 
 export default function Button({
   label,
   onClick,
   to,
-  iconPath,
-  imgStyle,
+  iconElement,
 }: ButtonProps) {
   const navigate = useNavigate();
 
@@ -29,16 +25,9 @@ export default function Button({
     }
   };
 
-  // If `iconPath` is provided, render the image with optional styling.
-  const renderIcon = iconPath ? (
-    <img src={iconPath} alt="button icon" className="icon" style={imgStyle} />
-  ) : null;
-
   return (
     <button onClick={handleClick} className="btn">
-      {/* <FontAwesomeIcon icon={['faReact']} /> */}
-      <FontAwesomeIcon icon={faReact} />
-      {renderIcon}
+      {iconElement ? iconElement : null}
       <span>{label}</span>
     </button>
   );
