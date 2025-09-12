@@ -1,5 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faReact } from "@fortawesome/free-brands-svg-icons";
 
 // Define types for the Button props
 interface ButtonProps {
@@ -34,6 +36,8 @@ export default function Button({
 
   return (
     <button onClick={handleClick} className="btn">
+      {/* <FontAwesomeIcon icon={['faReact']} /> */}
+      <FontAwesomeIcon icon={faReact} />
       {renderIcon}
       <span>{label}</span>
     </button>

@@ -1,9 +1,11 @@
-#root {
+/* #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-}
+  // add left-right padding 
+  // remove outline on hover for button icons
+} */
 
 .logo {
   height: 6em;
