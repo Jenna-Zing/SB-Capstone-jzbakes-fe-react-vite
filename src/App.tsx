@@ -8,29 +8,32 @@ import HomePage from "./pages/HomePage";
 import OrderHistory from "./pages/OrderHistoryPage";
 import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
+import { UserProvider } from "./context/UserProvider";
 
 function App() {
   return (
-    <Router>
-      <TopNavigation />
-      {/* Page content wrapper */}
-      <div
-        style={{
-          paddingLeft: "1rem",
-          paddingRight: "1rem",
-          // maxWidth: "1200px",
-          margin: "0 auto",
-          paddingTop: "24px", // Optional: vertical spacing from nav
-        }}
-      >
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/order-history" element={<OrderHistory />} />
-          <Route path="/sign-up" element={<SignupPage />} />
-          <Route path="/login" element={<LoginPage />} />
-        </Routes>
-      </div>
-    </Router>
+    <UserProvider>
+      <Router>
+        <TopNavigation />
+        {/* Page content wrapper */}
+        <div
+          style={{
+            paddingLeft: "1rem",
+            paddingRight: "1rem",
+            // maxWidth: "1200px",
+            margin: "0 auto",
+            paddingTop: "24px", // Optional: vertical spacing from nav
+          }}
+        >
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/order-history" element={<OrderHistory />} />
+            <Route path="/sign-up" element={<SignupPage />} />
+            <Route path="/login" element={<LoginPage />} />
+          </Routes>
+        </div>
+      </Router>
+    </UserProvider>
   );
 }
 

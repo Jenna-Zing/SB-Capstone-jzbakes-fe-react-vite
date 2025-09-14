@@ -1,8 +1,10 @@
 import Button from "@/components/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHouse } from "@fortawesome/free-solid-svg-icons";
+import { useUser } from "@/hooks/useUser";
 
 function TopNavigation() {
+  const { username, accessToken } = useUser();
   const isLoggedIn = false;
 
   return (
@@ -14,6 +16,7 @@ function TopNavigation() {
         width: "100%",
       }}
     >
+      <div>{JSON.stringify(username)}</div>
       <div
         style={{
           display: "flex",
