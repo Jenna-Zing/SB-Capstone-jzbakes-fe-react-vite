@@ -1,8 +1,8 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+// import { useState } from "react";
+// import reactLogo from "./assets/react.svg";
+// import viteLogo from "/vite.svg";
 import "./App.css";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import TopNavigation from "./components/TopNavigation";
 import HomePage from "./pages/HomePage";
 import OrderHistory from "./pages/OrderHistoryPage";
@@ -11,15 +11,14 @@ import LoginPage from "./pages/LoginPage";
 
 function App() {
   return (
-    <BrowserRouter>
+    <Router>
       <TopNavigation />
-
       {/* Page content wrapper */}
       <div
         style={{
-          paddingLeft: "16px",
-          paddingRight: "16px",
-          maxWidth: "1200px",
+          paddingLeft: "1rem",
+          paddingRight: "1rem",
+          // maxWidth: "1200px",
           margin: "0 auto",
           paddingTop: "24px", // Optional: vertical spacing from nav
         }}
@@ -31,7 +30,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
         </Routes>
       </div>
-    </BrowserRouter>
+    </Router>
   );
 }
 

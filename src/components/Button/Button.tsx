@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { Button as ShadButton } from "@/components/ui/button";
 
 // Define types for the Button props
 interface ButtonProps {
@@ -26,9 +27,9 @@ export default function Button({
   };
 
   return (
-    <button onClick={handleClick} className="btn">
-      {iconElement ? iconElement : null}
-      <span>{label}</span>
-    </button>
+    <ShadButton onClick={handleClick}>
+      {iconElement && <>{iconElement}</>}
+      {label && <span>{label}</span>}
+    </ShadButton>
   );
 }
