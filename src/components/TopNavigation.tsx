@@ -2,35 +2,51 @@ import Button from "@/components/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHouse } from "@fortawesome/free-solid-svg-icons";
 import { useUser } from "@/hooks/useUser";
+import { useNavigate } from "react-router-dom";
 
 function TopNavigation() {
-  const { username, accessToken } = useUser();
-  const isLoggedIn = false;
+  const { isLoggedIn, setUser } = useUser();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("/api/users/logout", {
+        method: "POST", // Use POST or GET, depending on your backend
+        credentials: "include", // Ensures cookies are sent with the request
+      });
+
+      if (response.ok) {
+        // Clear the user state after successful logout
+        setUser({
+          username: null,
+          firstName: null,
+          lastName: null,
+          email: null,
+          accessToken: null,
+          setUser, // pass down setUser function to the user state, so it still works within the user context
+          isLoggedIn: false, // Explicitly set isLoggedIn to false
+        });
+
+        // Optionally show a message to the user (could use a toast notification)
+        alert("You have been logged out!");
+
+        // Redirect to the login page or home page
+        navigate("/login"); // Redirect to the login page (or home page)
+      } else {
+        const error = await response.json();
+        alert(`Logout failed: ${error.message}`);
+      }
+    } catch (error) {
+      console.error("Error logging out:", error);
+      alert("An error occurred while logging out. Please try again.");
+    }
+  };
 
   return (
-    <nav
-      style={{
-        background: "#fff",
-        boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
-        height: "64px",
-        width: "100%",
-      }}
-    >
-      <div>{JSON.stringify(username)}</div>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          paddingLeft: "16px",
-          paddingRight: "16px",
-          height: "100%",
-          maxWidth: "1200px",
-          margin: "0 auto",
-        }}
-      >
+    <nav className="bg-white shadow-md h-16 w-full">
+      <div className="flex items-center justify-between px-4 h-full max-w-screen-xl mx-auto">
         {/* Left: React Logo */}
-        <div style={{ display: "flex", alignItems: "center", flex: 1 }}>
+        <div className="flex items-center flex-1">
           <Button
             label=""
             onClick={() => (window.location.href = "/")}
@@ -39,23 +55,19 @@ function TopNavigation() {
         </div>
 
         {/* Center: Order History Button */}
-        <div style={{ display: "flex", justifyContent: "center", flex: 1 }}>
-          <Button
-            label="Order History"
-            onClick={() => (window.location.href = "/order-history")}
-          />
-        </div>
+        {isLoggedIn ? (
+          <>
+            <div className="flex justify-center flex-1">
+              <Button
+                label="Order History"
+                onClick={() => (window.location.href = "/order-history")}
+              />
+            </div>
+          </>
+        ) : null}
 
         {/* Right: Auth Buttons */}
-        <div
-          style={{
-            display: "flex",
-            gap: "16px",
-            alignItems: "center",
-            justifyContent: "flex-end",
-            flex: 1,
-          }}
-        >
+        <div className="flex gap-4 items-center justify-end flex-1">
           {!isLoggedIn ? (
             <>
               <Button
@@ -68,12 +80,7 @@ function TopNavigation() {
               />
             </>
           ) : (
-            <Button
-              label="Logout"
-              onClick={() => {
-                /* logout logic here */
-              }}
-            />
+            <Button label="Logout" onClick={handleLogout} />
           )}
         </div>
       </div>

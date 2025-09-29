@@ -3,16 +3,18 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import useUser from "@/hooks/useUser";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 function LoginPage() {
+  const { setUser } = useUser(); // this will allow us to update the user state after login
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     password: "",
     username: "",
   });
-
-  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -33,6 +35,17 @@ function LoginPage() {
     });
 
     if (response.ok) {
+      const { user } = await response.json();
+      setUser({
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        accessToken: user.accessToken,
+        setUser: setUser, // pass down setUser function to the user state, so it still works within the user context
+        isLoggedIn: true, // the user is now logged in
+      });
+
       alert("Login successful!  Redirecting to home page...");
       navigate("/");
     } else {
