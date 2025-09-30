@@ -1,12 +1,24 @@
 import Button from "@/components/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHouse } from "@fortawesome/free-solid-svg-icons";
+import { faHouse, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { useUser } from "@/hooks/useUser";
 import { useNavigate } from "react-router-dom";
+import type { CartItem } from "@/context/CartContext";
+import useCart from "@/hooks/useCart";
 
-function TopNavigation() {
+type TopNavigationProps = {
+  onCartToggle: () => void;
+};
+
+function TopNavigation({ onCartToggle }: TopNavigationProps) {
   const { isLoggedIn, setUser } = useUser();
+  const { cartItems } = useCart();
   const navigate = useNavigate();
+
+  const totalQuantity = cartItems.reduce(
+    (sum: number, item: CartItem) => sum + item.quantity,
+    0
+  );
 
   const handleLogout = async () => {
     try {
@@ -80,7 +92,22 @@ function TopNavigation() {
               />
             </>
           ) : (
-            <Button label="Logout" onClick={handleLogout} />
+            <>
+              {/* Cart icon with badge */}
+              <button
+                onClick={onCartToggle}
+                className="relative p-2 rounded hover:bg-gray-100"
+                aria-label="Toggle cart"
+              >
+                <FontAwesomeIcon icon={faShoppingCart} size="lg" />
+                {totalQuantity > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full px-1">
+                    {totalQuantity}
+                  </span>
+                )}
+              </button>
+              <Button label="Logout" onClick={handleLogout} />
+            </>
           )}
         </div>
       </div>

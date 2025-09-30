@@ -9,30 +9,48 @@ import OrderHistory from "./pages/OrderHistoryPage";
 import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
 import { UserProvider } from "./context/UserProvider";
+import { CartProvider } from "./context/CartProvider";
+import CartSidebar from "./components/CartSideNav";
+import { useState } from "react";
 
 function App() {
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
+  // Toggle cart sidebar open/close
+  const toggleCart = () => setIsCartOpen((open: boolean) => !open);
+
+  // Close cart sidebar explicitly
+  const closeCart = () => setIsCartOpen(false);
+
   return (
     <UserProvider>
-      <Router>
-        <TopNavigation />
-        {/* Page content wrapper */}
-        <div
-          style={{
-            paddingLeft: "1rem",
-            paddingRight: "1rem",
-            // maxWidth: "1200px",
-            margin: "0 auto",
-            paddingTop: "24px", // Optional: vertical spacing from nav
-          }}
-        >
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/order-history" element={<OrderHistory />} />
-            <Route path="/sign-up" element={<SignupPage />} />
-            <Route path="/login" element={<LoginPage />} />
-          </Routes>
-        </div>
-      </Router>
+      <CartProvider>
+        <Router>
+          {/* Pass the toggleCart function so TopNavigation can open/close cart */}
+          <TopNavigation onCartToggle={toggleCart} />
+
+          {/* Cart sidebar controlled by isCartOpen */}
+          <CartSidebar isOpen={isCartOpen} onClose={closeCart} />
+
+          {/* Page content wrapper */}
+          <div
+            style={{
+              paddingLeft: "1rem",
+              paddingRight: "1rem",
+              // maxWidth: "1200px",
+              margin: "0 auto",
+              paddingTop: "24px", // Optional: vertical spacing from nav
+            }}
+          >
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/order-history" element={<OrderHistory />} />
+              <Route path="/sign-up" element={<SignupPage />} />
+              <Route path="/login" element={<LoginPage />} />
+            </Routes>
+          </div>
+        </Router>
+      </CartProvider>
     </UserProvider>
   );
 }

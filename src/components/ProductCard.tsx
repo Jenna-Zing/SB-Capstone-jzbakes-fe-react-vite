@@ -1,20 +1,68 @@
-import type { Product } from "../pages/HomePage";
+import { useState } from "react";
+import { type Product } from "../pages/HomePage";
+import useCart from "../hooks/useCart";
 
 type ProductCardProps = {
   product: Product;
 };
 
 export default function ProductCard({ product }: ProductCardProps) {
+  const { addToCart } = useCart(); // Get addToCart function from cart provider
+  const [isDescriptionExpanded, setDescriptionExpanded] = useState(false);
+
+  // Toggle description visibility
+  const toggleDescription = () => setDescriptionExpanded((prev) => !prev);
+
+  const handleAddToCart = () => {
+    addToCart({
+      id: product.id,
+      name: product.name,
+      cost: product.cost,
+      quantity: 1,
+      imgURL: product.imgURL,
+    });
+  };
+
   return (
-    <div>
+    <div className="w-[250px] border border-[#ddd] p-4 rounded-lg">
       <img
         src={product.imgURL}
         alt={product.name}
-        style={{ width: "100px", height: "100px" }}
+        className="w-full h-[175px] object-contain"
       />
-      <h2>{product.name}</h2>
-      <p>Cost: {"$" + product.cost.toFixed(2)}</p>
-      <p>{product.description}</p>
+      <h2 className="text-lg font-semibold">{product.name}</h2>
+      <p className="text-sm text-gray-600">
+        Cost: {"$" + product.cost.toFixed(2)}
+      </p>
+
+      {/* Expandable description */}
+      <div>
+        <p
+          className={`${
+            isDescriptionExpanded ? "line-clamp-none" : "line-clamp-3"
+          } overflow-hidden`}
+        >
+          {product.description}
+        </p>
+
+        {/* Conditionally render the "Show More" button */}
+        {product.description.length > 80 && ( // Adjust this threshold as needed
+          <button
+            onClick={toggleDescription}
+            className="text-blue-500 hover:text-blue-700"
+          >
+            {isDescriptionExpanded ? "Show Less" : "Show More"}
+          </button>
+        )}
+      </div>
+
+      {/* Add to Cart button */}
+      <button
+        onClick={handleAddToCart}
+        className="mt-2 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+      >
+        Add to Cart
+      </button>
     </div>
   );
 }
