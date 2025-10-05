@@ -7,6 +7,8 @@ import useUser from "@/hooks/useUser";
 import { loginUser } from "@/api/auth";
 import { toast } from "react-toastify";
 import { showFriendlyFetchError } from "@/utils/errorHandlers";
+import { loginSchema } from "@/validations/loginSchema";
+import * as yup from "yup";
 
 function LoginPage() {
   const { setUser } = useUser(); // this will allow us to update the user state after login
@@ -16,18 +18,28 @@ function LoginPage() {
     password: "",
     username: "",
   });
+  const [errors, setErrors] = useState<Partial<typeof formData>>({});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
+
+    // clear the field error on change
+    setErrors({ ...errors, [e.target.name]: "" });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
+      // clear any previous errors
+      setErrors({});
+
+      await loginSchema.validate(formData, { abortEarly: false }); // run full form validation
+
+      // form validation is successful, proceed with login
       const { user } = await loginUser(formData);
 
       setUser({
@@ -42,8 +54,19 @@ function LoginPage() {
 
       toast.success("Login successful!  Redirecting to home page...");
       navigate("/");
-    } catch (err) {
-      showFriendlyFetchError(err, "Login failed");
+    } catch (err: any) {
+      // handle yup validation errors
+      if (err.name === "ValidationError") {
+        const errorMap: { [key: string]: string } = {};
+        err.inner.forEach((validationError: yup.ValidationError) => {
+          if (validationError.path) {
+            errorMap[validationError.path] = validationError.message;
+          }
+        });
+        setErrors(errorMap);
+      } else {
+        showFriendlyFetchError(err, "Login failed");
+      }
     }
 
     console.log("Form submitted:", formData);
@@ -65,6 +88,9 @@ function LoginPage() {
             onChange={handleChange}
             placeholder="Username"
           />
+          {errors.username && (
+            <p className="text-red-500 text-sm">{errors.username}</p>
+          )}
         </div>
 
         {/* Password */}
@@ -78,6 +104,9 @@ function LoginPage() {
             onChange={handleChange}
             placeholder="Password"
           />
+          {errors.password && (
+            <p className="text-red-500 text-sm">{errors.password}</p>
+          )}
         </div>
 
         <Button type="submit" className="size-fit mx-auto block ">

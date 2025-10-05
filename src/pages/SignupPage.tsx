@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { showFriendlyFetchError } from "@/utils/errorHandlers";
 import { signupUser } from "@/api/auth";
+import { signupSchema } from "@/validations/signupSchema";
+import * as yup from "yup";
 
 function SignupPage() {
   const [formData, setFormData] = useState({
@@ -17,6 +19,7 @@ function SignupPage() {
     password: "",
     username: "",
   });
+  const [errors, setErrors] = useState<Partial<typeof formData>>({});
 
   const navigate = useNavigate();
 
@@ -25,19 +28,39 @@ function SignupPage() {
       ...formData,
       [e.target.name]: e.target.value,
     });
+
+    // clear the field error on change
+    setErrors({ ...errors, [e.target.name]: "" });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
+      // clear any previous errors
+      setErrors({});
+
+      await signupSchema.validate(formData, { abortEarly: false }); // run full form validation
+
+      // form validation is successful, proceed with signup
       await signupUser(formData);
 
       // Redirect to login page after successful signup
       toast.success("Signup successful!  Redirecting to login page...");
       navigate("/login");
-    } catch (err) {
-      showFriendlyFetchError(err, "Signup failed");
+    } catch (err: any) {
+      // handle yup validation errors
+      if (err.name === "ValidationError") {
+        const errorMap: { [key: string]: string } = {};
+        err.inner.forEach((validationError: yup.ValidationError) => {
+          if (validationError.path) {
+            errorMap[validationError.path] = validationError.message;
+          }
+        });
+        setErrors(errorMap);
+      } else {
+        showFriendlyFetchError(err, "Login failed");
+      }
     }
 
     console.log("Form submitted:", formData);
@@ -60,6 +83,9 @@ function SignupPage() {
               onChange={handleChange}
               placeholder="First Name"
             />
+            {errors.firstName && (
+              <p className="text-red-500 text-sm">{errors.firstName}</p>
+            )}
           </div>
 
           <div>
@@ -71,6 +97,9 @@ function SignupPage() {
               onChange={handleChange}
               placeholder="Last Name"
             />
+            {errors.lastName && (
+              <p className="text-red-500 text-sm">{errors.lastName}</p>
+            )}
           </div>
         </div>
 
@@ -84,6 +113,9 @@ function SignupPage() {
             onChange={handleChange}
             placeholder="Phone Number"
           />
+          {errors.phoneNumber && (
+            <p className="text-red-500 text-sm">{errors.phoneNumber}</p>
+          )}
         </div>
 
         {/* Email */}
@@ -97,6 +129,9 @@ function SignupPage() {
             onChange={handleChange}
             placeholder="Email"
           />
+          {errors.email && (
+            <p className="text-red-500 text-sm">{errors.email}</p>
+          )}
         </div>
 
         {/* Username */}
@@ -109,6 +144,9 @@ function SignupPage() {
             onChange={handleChange}
             placeholder="Username"
           />
+          {errors.username && (
+            <p className="text-red-500 text-sm">{errors.username}</p>
+          )}
         </div>
 
         {/* Password */}
@@ -122,6 +160,9 @@ function SignupPage() {
             onChange={handleChange}
             placeholder="Password"
           />
+          {errors.password && (
+            <p className="text-red-500 text-sm">{errors.password}</p>
+          )}
         </div>
 
         <Button type="submit" className="size-fit mx-auto block ">
