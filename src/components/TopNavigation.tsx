@@ -61,7 +61,7 @@ function TopNavigation({ onCartToggle }: TopNavigationProps) {
         <div className="flex items-center flex-1">
           <Button
             label=""
-            onClick={() => (window.location.href = "/")}
+            onClick={() => navigate("/")}
             iconElement={<FontAwesomeIcon icon={faHouse} />}
           />
         </div>
@@ -72,7 +72,7 @@ function TopNavigation({ onCartToggle }: TopNavigationProps) {
             <div className="flex justify-center flex-1">
               <Button
                 label="Order History"
-                onClick={() => (window.location.href = "/order-history")}
+                onClick={() => navigate("/order-history")}
               />
             </div>
           </>
@@ -82,14 +82,8 @@ function TopNavigation({ onCartToggle }: TopNavigationProps) {
         <div className="flex gap-4 items-center justify-end flex-1">
           {!isLoggedIn ? (
             <>
-              <Button
-                label="Sign Up"
-                onClick={() => (window.location.href = "/sign-up")}
-              />
-              <Button
-                label="Login"
-                onClick={() => (window.location.href = "/login")}
-              />
+              <Button label="Sign Up" onClick={() => navigate("/sign-up")} />
+              <Button label="Login" onClick={() => navigate("/login")} />
             </>
           ) : (
             <>
