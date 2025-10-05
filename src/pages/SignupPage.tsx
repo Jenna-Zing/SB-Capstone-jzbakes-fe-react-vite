@@ -4,8 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useNavigate } from "react-router-dom";
-
-const API_URL = import.meta.env.VITE_API_URL;
+import { toast } from "react-toastify";
+import { showFriendlyFetchError } from "@/utils/errorHandlers";
+import { signupUser } from "@/api/auth";
 
 function SignupPage() {
   const [formData, setFormData] = useState({
@@ -29,21 +30,14 @@ function SignupPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const response = await fetch(`${API_URL}/api/users/signup`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
+    try {
+      await signupUser(formData);
 
-    if (response.ok) {
       // Redirect to login page after successful signup
-      alert("Signup successful!  Redirecting to login page...");
+      toast.success("Signup successful!  Redirecting to login page...");
       navigate("/login");
-    } else {
-      const err = await response.json();
-      alert(`Signup failed: ${err.message}`);
+    } catch (err) {
+      showFriendlyFetchError(err, "Signup failed");
     }
 
     console.log("Form submitted:", formData);

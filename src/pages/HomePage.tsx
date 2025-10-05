@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import ProductCard from "../components/ProductCard";
-
-const API_URL = import.meta.env.VITE_API_URL;
+import { getProducts } from "@/api/api";
+import { showFriendlyFetchError } from "@/utils/errorHandlers";
 
 export type Product = {
   id: number;
@@ -23,11 +23,8 @@ function HomePage() {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/products`);
-      const data = await response.json();
-      console.log("Fetch GET PRODUCTS data:", data);
-
-      const mappedProducts = data.products.map((product: Product) => {
+      const products = await getProducts();
+      const mappedProducts = products.map((product: Product) => {
         const imagePath = `../assets/baked_goods/${product.imgURL}`;
         const resolvedImage = imageMap[imagePath] || "";
         return {
@@ -36,10 +33,9 @@ function HomePage() {
         };
       });
 
-      console.log("Mapped products:", mappedProducts);
       setProducts(mappedProducts);
     } catch (err) {
-      console.error("Error fetching products:", err);
+      showFriendlyFetchError(err, "getProducts failed");
     }
   };
 

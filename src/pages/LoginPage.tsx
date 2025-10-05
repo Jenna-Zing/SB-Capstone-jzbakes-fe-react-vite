@@ -4,8 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import useUser from "@/hooks/useUser";
-
-const API_URL = import.meta.env.VITE_API_URL;
+import { loginUser } from "@/api/auth";
+import { toast } from "react-toastify";
+import { showFriendlyFetchError } from "@/utils/errorHandlers";
 
 function LoginPage() {
   const { setUser } = useUser(); // this will allow us to update the user state after login
@@ -26,16 +27,9 @@ function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const response = await fetch(`${API_URL}/api/users/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
+    try {
+      const { user } = await loginUser(formData);
 
-    if (response.ok) {
-      const { user } = await response.json();
       setUser({
         username: user.username,
         firstName: user.firstName,
@@ -46,11 +40,10 @@ function LoginPage() {
         isLoggedIn: true, // the user is now logged in
       });
 
-      alert("Login successful!  Redirecting to home page...");
+      toast.success("Login successful!  Redirecting to home page...");
       navigate("/");
-    } else {
-      const err = await response.json();
-      alert(`Login failed: ${err.message}`);
+    } catch (err) {
+      showFriendlyFetchError(err, "Login failed");
     }
 
     console.log("Form submitted:", formData);
