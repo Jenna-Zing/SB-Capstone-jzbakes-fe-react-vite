@@ -1,3 +1,4 @@
+import type { UserContextType } from "@/context/UserContext";
 import { fetchJson } from "./api_wrapper";
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -57,4 +58,38 @@ export async function signupUser(
     },
     body: JSON.stringify(formData),
   });
+}
+
+export async function restoreUserSession(): Promise<Omit<
+  UserContextType,
+  "setUser"
+> | null> {
+  try {
+    const res = await fetch(`${API_URL}/api/users/me`, {
+      method: "GET",
+      credentials: "include", // sends httpOnly cookie
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to contact server");
+    }
+
+    const user = await res.json();
+
+    if (!user) {
+      return null; // not logged in or session expired
+    }
+
+    // return user info retrieved from valid session cookie; defaults to null for error-cases above for user context
+    return {
+      username: user.username ?? null,
+      firstName: user.firstName ?? null,
+      lastName: user.lastName ?? null,
+      email: user.email ?? null,
+      isLoggedIn: user.isLoggedIn ?? false, // default to false if not provided
+    };
+  } catch (error) {
+    console.error("Unexpected error restoring session:", error);
+    return null; // return null as fallback, since no valid session could be restored
+  }
 }

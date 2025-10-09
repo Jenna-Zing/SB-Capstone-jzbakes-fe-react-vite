@@ -34,9 +34,8 @@ function TopNavigation({ onCartToggle }: TopNavigationProps) {
           firstName: null,
           lastName: null,
           email: null,
-          accessToken: null,
           setUser, // pass down setUser function to the user state, so it still works within the user context
-          isLoggedIn: false, // Explicitly set isLoggedIn to false
+          isLoggedIn: false,
         });
 
         // Optionally show a message to the user (could use a toast notification)

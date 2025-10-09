@@ -47,9 +47,8 @@ function LoginPage() {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
-        accessToken: user.accessToken,
         setUser: setUser, // pass down setUser function to the user state, so it still works within the user context
-        isLoggedIn: true, // the user is now logged in
+        isLoggedIn: true,
       });
 
       toast.success("Login successful!  Redirecting to home page...");
