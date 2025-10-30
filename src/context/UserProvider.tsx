@@ -71,6 +71,8 @@ export const UserProvider = ({ children }: Props) => {
 
   // 3. Return the context provider with the user value and render any children props inside
   return (
-    <UserContext.Provider value={userValue}>{children}</UserContext.Provider>
+    <UserContext.Provider value={{ user: user }}>
+      {children}
+    </UserContext.Provider>
   );
 };

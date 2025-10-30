@@ -11,7 +11,7 @@ type TopNavigationProps = {
 };
 
 function TopNavigation({ onCartToggle }: TopNavigationProps) {
-  const { isLoggedIn, setUser } = useUser();
+  const { user, isLoggedIn, setUser } = useUser();
   const { cartItems } = useCart();
   const navigate = useNavigate();
 
@@ -66,7 +66,7 @@ function TopNavigation({ onCartToggle }: TopNavigationProps) {
 
         {/* Center: Order History Button */}
         {/* check with !!user (by object) or by username existence  */}
-        {isLoggedIn ? (
+        {!!user ? (
           <>
             <div className="flex justify-center flex-1">
               <Button
