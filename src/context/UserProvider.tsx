@@ -15,7 +15,6 @@ export const UserProvider = ({ children }: Props) => {
     firstName: null,
     lastName: null,
     email: null,
-    setUser: () => {}, // not manually defined by default, but is defined by useState
     isLoggedIn: false, // default to false (not logged in)
   });
 
@@ -30,31 +29,43 @@ export const UserProvider = ({ children }: Props) => {
       );
   };
 
-  // fetch user info on first load (from httpOnly cookie if it exists)
-  useEffect(() => {
-    const restore = async () => {
-      try {
-        const restoredUser = await restoreUserSession();
-        if (restoredUser) {
-          setUser({ ...restoredUser, setUser, isLoggedIn: true }); // update user state with the restored user data
-          console.log("User session restored!", restoredUser);
-        } else {
-          console.log("No user session found"); // stay in default mode (default are null values, as seen above)
-          setUser({ ...user, setUser, isLoggedIn: false });
-        }
-      } catch (error) {
-        console.error("Unexpected error - unable to restore session", error); // logs error, but state remains unchanged (null values)
-        setUser({ ...user, setUser, isLoggedIn: false });
-      }
-    };
+  // // fetch user info on first load (from httpOnly cookie if it exists)
+  // useEffect(() => {
+  //   const restore = async () => {
+  //     try {
+  //       const restoredUser = await restoreUserSession();
+  //       if (restoredUser) {
+  //         setUser({ ...restoredUser, isLoggedIn: true }); // update user state with the restored user data
+  //         console.log("User session restored!", restoredUser);
+  //       } else {
+  //         console.log("No user session found"); // stay in default mode (default are null values, as seen above)
+  //         setUser({ ...user, isLoggedIn: false });
+  //       }
+  //     } catch (error) {
+  //       console.error("Unexpected error - unable to restore session", error); // logs error, but state remains unchanged (null values)
+  //       setUser({ ...user, isLoggedIn: false });
+  //     }
+  //   };
 
-    restore();
+  //   restore();
+  // }, []);
+
+  // fetch user info FROM LOCAL STORAGE
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const parsedUser: UserContextType = JSON.parse(storedUser);
+      setUser({
+        ...parsedUser,
+        isLoggedIn: isUserComplete(parsedUser), // dynamically set isLoggedIn based on whether user info is complete
+      });
+      console.log("User loaded from local storage:", parsedUser);
+    }
   }, []);
 
   // 2. Assign the real setUser inside the value object
   const userValue = {
     ...user, // includes username, firstName, etc. AND the old dummy setUser
-    setUser, // this overwrites the old dummy setUser with the real setUser function from useState,
     isLoggedIn: isUserComplete(user), // dynamically set isLoggedIn based on whether user info is complete
   };
 

@@ -34,7 +34,6 @@ function TopNavigation({ onCartToggle }: TopNavigationProps) {
           firstName: null,
           lastName: null,
           email: null,
-          setUser, // pass down setUser function to the user state, so it still works within the user context
           isLoggedIn: false,
         });
 
@@ -66,6 +65,7 @@ function TopNavigation({ onCartToggle }: TopNavigationProps) {
         </div>
 
         {/* Center: Order History Button */}
+        {/* check with !!user (by object) or by username existence  */}
         {isLoggedIn ? (
           <>
             <div className="flex justify-center flex-1">

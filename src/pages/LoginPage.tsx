@@ -42,14 +42,25 @@ function LoginPage() {
       // form validation is successful, proceed with login
       const { user } = await loginUser(formData);
 
-      setUser({
-        username: user.username,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        setUser: setUser, // pass down setUser function to the user state, so it still works within the user context
-        isLoggedIn: true,
-      });
+      // setUser({
+      //   username: user.username,
+      //   firstName: user.firstName,
+      //   lastName: user.lastName,
+      //   email: user.email,
+      //   isLoggedIn: true,
+      // });
+
+      // add user info to local storage (for app to retain user info on refresh - react hooks, context, etc. do not persist on refresh.)
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          username: user.username,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          isLoggedIn: true,
+        })
+      );
 
       toast.success("Login successful!  Redirecting to home page...");
       navigate("/");

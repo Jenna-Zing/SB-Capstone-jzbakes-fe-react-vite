@@ -6,7 +6,6 @@ export interface UserContextType {
   firstName: string | null;
   lastName: string | null;
   email: string | null;
-  setUser: (user: UserContextType) => void; // add a setter for updates
   isLoggedIn: boolean; // indicates login status of a user (true if all user fields are non-null and non-empty)
 }
 
@@ -16,7 +15,6 @@ const initialState: UserContextType = {
   firstName: null,
   lastName: null,
   email: null,
-  setUser: () => {}, // dummy function, will be replaced by real function in UserProvider
   isLoggedIn: false, // default to false (not logged in)
 };
 
