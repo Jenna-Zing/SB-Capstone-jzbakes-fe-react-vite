@@ -86,7 +86,6 @@ export async function restoreUserSession(): Promise<Omit<
       firstName: user.firstName ?? null,
       lastName: user.lastName ?? null,
       email: user.email ?? null,
-      isLoggedIn: user.isLoggedIn ?? false, // default to false if not provided
     };
   } catch (error) {
     console.error("Unexpected error restoring session:", error);

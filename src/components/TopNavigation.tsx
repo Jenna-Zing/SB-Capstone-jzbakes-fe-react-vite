@@ -11,7 +11,7 @@ type TopNavigationProps = {
 };
 
 function TopNavigation({ onCartToggle }: TopNavigationProps) {
-  const { user, isLoggedIn, setUser } = useUser();
+  const { user, setUser } = useUser();
   const { cartItems } = useCart();
   const navigate = useNavigate();
 
@@ -29,13 +29,8 @@ function TopNavigation({ onCartToggle }: TopNavigationProps) {
 
       if (response.ok) {
         // Clear the user state after successful logout
-        setUser({
-          username: null,
-          firstName: null,
-          lastName: null,
-          email: null,
-          isLoggedIn: false,
-        });
+        localStorage.removeItem("user");
+        // TODO: remove user from context/state management as well (remember, it only clears it if refreshed)
 
         // Optionally show a message to the user (could use a toast notification)
         alert("You have been logged out!");
@@ -66,7 +61,7 @@ function TopNavigation({ onCartToggle }: TopNavigationProps) {
 
         {/* Center: Order History Button */}
         {/* check with !!user (by object) or by username existence  */}
-        {!!user ? (
+        {user ? (
           <>
             <div className="flex justify-center flex-1">
               <Button
@@ -79,7 +74,7 @@ function TopNavigation({ onCartToggle }: TopNavigationProps) {
 
         {/* Right: Auth Buttons */}
         <div className="flex gap-4 items-center justify-end flex-1">
-          {!isLoggedIn ? (
+          {!user ? (
             <>
               <Button label="Sign Up" onClick={() => navigate("/sign-up")} />
               <Button label="Login" onClick={() => navigate("/login")} />
