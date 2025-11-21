@@ -7,26 +7,9 @@ export async function fetchJson<T>(
 
     // handle non-2xx responses (e.g. 4xx, 5xx)
     if (!response.ok) {
-      let message = "Request failed";
-
-      // Log useful debug info
-      console.error(
-        `[fetchJson] HTTP Error: ${response.status} ${response.statusText} (${url})`
+      throw new Error(
+        `HTTP Error: ${response.status} ${response.statusText} (${url})`
       );
-
-      try {
-        // try to parse error body as JSON to extract a specific error message
-        const errorData = await response.json();
-
-        // use the server-provided message if available, else keep fallback (generic)
-        message = errorData.message || message;
-      } catch (jsonError) {
-        // if response body is not valid JSON (e.g. HTML, plain text, empty), log the parsing error
-        console.error("Error parsing JSON error response:", jsonError);
-      }
-
-      // throw the error (will be caught by outer catch or caller)
-      throw new Error(message);
     }
 
     // SUCCESSFUL RESPONSE - attempt to parse and return JSON body

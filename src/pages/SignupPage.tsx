@@ -9,8 +9,10 @@ import { showFriendlyFetchError } from "@/utils/errorHandlers";
 import { signupUser } from "@/api/auth";
 import { signupSchema } from "@/validations/signupSchema";
 import * as yup from "yup";
+import useUser from "@/hooks/useUser";
 
 function SignupPage() {
+  const { setUser } = useUser(); // this will allow us to update the user state after signup
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -44,6 +46,13 @@ function SignupPage() {
 
       // form validation is successful, proceed with signup
       await signupUser(formData);
+
+      setUser({
+        username: formData.username,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+      });
 
       // Redirect to login page after successful signup
       toast.success("Signup successful!  Redirecting to login page...");

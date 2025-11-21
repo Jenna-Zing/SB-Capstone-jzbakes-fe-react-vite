@@ -31,6 +31,7 @@ function TopNavigation({ onCartToggle }: TopNavigationProps) {
         // Clear the user state after successful logout
         localStorage.removeItem("user");
         // TODO: remove user from context/state management as well (remember, it only clears it if refreshed)
+        setUser(null);
 
         // Optionally show a message to the user (could use a toast notification)
         alert("You have been logged out!");

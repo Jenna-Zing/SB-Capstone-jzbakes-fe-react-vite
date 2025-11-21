@@ -2,6 +2,7 @@
 
 export interface UserContext {
   user: User | null;
+  setUser: (user: User | null) => void;
 }
 export interface User {
   username: string | null;

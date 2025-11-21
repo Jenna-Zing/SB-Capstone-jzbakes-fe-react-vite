@@ -53,6 +53,13 @@ function LoginPage() {
         })
       );
 
+      setUser({
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+      });
+
       toast.success("Login successful!  Redirecting to home page...");
       navigate("/");
     } catch (err: any) {

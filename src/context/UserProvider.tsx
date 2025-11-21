@@ -9,26 +9,20 @@ interface Props {
 // a component that provides the data to the rest of the app - wraps around your app and holds the *real user state*
 export const UserProvider = ({ children }: Props) => {
   // 1. Initialize the user state
-  const [user, setUser] = useState<User>({
+  const [user, setUser] = useState<User | null>({
     username: null,
     firstName: null,
     lastName: null,
     email: null,
   });
 
-  // fetch user info FROM LOCAL STORAGE
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      const parsedUser: User = JSON.parse(storedUser);
-      setUser(parsedUser);
-      console.log("User loaded from local storage:", parsedUser);
-    }
-  }, []);
+    console.log("User state updated:", user);
+  }, [user]);
 
   // 3. Return the context provider with the user value and render any children props inside
   return (
-    <UserContext.Provider value={{ user: user }}>
+    <UserContext.Provider value={{ user, setUser }}>
       {children}
     </UserContext.Provider>
   );
