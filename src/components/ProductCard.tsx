@@ -56,6 +56,18 @@ export default function ProductCard({ product }: ProductCardProps) {
         )}
       </div>
 
+      {/* Ingredients section */}
+      {product.ingredients && product.ingredients.length > 0 && (
+        <div className="mt-2">
+          <h3 className="text-sm font-semibold">Ingredients:</h3>
+          <ul className="list-disc list-inside text-sm text-gray-700">
+            {product.ingredients.map((ingredient, index) => (
+              <li key={index}>{ingredient}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       {/* Add to Cart button */}
       <button
         onClick={handleAddToCart}
