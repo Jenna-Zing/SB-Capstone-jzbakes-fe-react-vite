@@ -13,6 +13,7 @@ interface CartContextType {
   cartItems: CartItem[];
   addToCart: (item: CartItem) => void;
   removeFromCart: (id: number) => void;
+  updateQuantity: (id: number, delta: number) => void;
   clearCart: () => void;
 }
 
@@ -21,6 +22,7 @@ const initialState: CartContextType = {
   cartItems: [],
   addToCart: () => {},
   removeFromCart: () => {},
+  updateQuantity: () => {},
   clearCart: () => {},
 };
 

@@ -2,6 +2,7 @@ import React from "react";
 import useCart from "@/hooks/useCart";
 import { type CartItem } from "@/context/CartContext";
 import Button from "@/components/Button";
+import { Trash2 } from "lucide-react";
 
 interface CartSidebarProps {
   isOpen: boolean;
@@ -9,12 +10,17 @@ interface CartSidebarProps {
 }
 
 export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
-  const { cartItems, removeFromCart, clearCart } = useCart();
+  const { cartItems, removeFromCart, updateQuantity, clearCart } = useCart();
 
   const totalCost = cartItems.reduce(
     (total, item) => total + item.cost * item.quantity,
     0
   );
+
+  // handle quantity change of a product (increment or decrement)
+  const handleQuantityChange = (id: number, change: number) => {
+    updateQuantity(id, change); // increment or decremnt based on change
+  };
 
   return (
     <div
@@ -38,17 +44,46 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
             {cartItems.map((item: CartItem) => (
               <li
                 key={item.id}
-                className="flex justify-between items-center my-2"
+                className="flex justify-between items-center p-4 border-t"
               >
-                <div>
+                <div className="flex-1">
                   <p>{item.name}</p>
-                  <p>Quantity: {item.quantity}</p>
+                  <div className="flex items-center space-x-2 text-sm text-gray-600">
+                    {/* Decrement Button */}
+                    {item.quantity === 1 ? (
+                      <button
+                        onClick={() => removeFromCart(item.id)}
+                        className="px-2 py-1 border rounded-md text-red-500 border-red-200 hover:bg-red-50"
+                        title="Remove item"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => handleQuantityChange(item.id, -1)}
+                        className="px-2 py-1 border rounded-md"
+                      >
+                        -
+                      </button>
+                    )}
+                    <span>{item.quantity}</span>
+                    {/* Increment Button */}
+                    <button
+                      onClick={() => handleQuantityChange(item.id, 1)}
+                      className="px-2 py-1 border rounded-md"
+                    >
+                      +
+                    </button>
+                  </div>
                   <p>${item.cost.toFixed(2)} each</p>
                 </div>
-                <Button
+                {/* Remove Item Button */}
+                <button
                   onClick={() => removeFromCart(item.id)}
-                  label="Remove"
-                />
+                  className="bg-red-500 text-white py-1 px-3 rounded-md "
+                >
+                  Remove
+                </button>
               </li>
             ))}
           </ul>
