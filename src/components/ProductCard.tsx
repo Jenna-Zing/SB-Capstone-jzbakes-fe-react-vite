@@ -9,9 +9,11 @@ type ProductCardProps = {
 export default function ProductCard({ product }: ProductCardProps) {
   const { addToCart } = useCart(); // Get addToCart function from cart provider
   const [isDescriptionExpanded, setDescriptionExpanded] = useState(false);
+  const [isIngredientsExpanded, setIngredientsExpanded] = useState(false);
 
   // Toggle description visibility
   const toggleDescription = () => setDescriptionExpanded((prev) => !prev);
+  const toggleIngredients = () => setIngredientsExpanded((prev) => !prev);
 
   const handleAddToCart = () => {
     addToCart({
@@ -56,15 +58,30 @@ export default function ProductCard({ product }: ProductCardProps) {
         )}
       </div>
 
-      {/* Ingredients section */}
+      {/* Ingredients accordion */}
       {product.ingredients && product.ingredients.length > 0 && (
-        <div className="mt-2">
-          <h3 className="text-sm font-semibold">Ingredients:</h3>
-          <ul className="list-disc pl-5 list-inside text-sm text-gray-700">
-            {product.ingredients.map((ingredient, index) => (
-              <li key={index}>{ingredient}</li>
-            ))}
-          </ul>
+        <div className="mt-3">
+          <button
+            onClick={toggleIngredients}
+            className="flex items-center justify-between w-full text-sm font-semibold text-left"
+          >
+            <span>Ingredients</span>
+            <span
+              className={`transition-transform ${
+                isIngredientsExpanded ? "rotate-180" : ""
+              }`}
+            >
+              ▼
+            </span>
+          </button>
+
+          {isIngredientsExpanded && (
+            <ul className="mt-2 list-disc pl-5 list-inside text-sm text-gray-700">
+              {product.ingredients.map((ingredient, index) => (
+                <li key={index}>{ingredient}</li>
+              ))}
+            </ul>
+          )}
         </div>
       )}
 
