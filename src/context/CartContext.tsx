@@ -15,6 +15,7 @@ interface CartContextType {
   removeFromCart: (id: number) => void;
   updateQuantity: (id: number, delta: number) => void;
   clearCart: () => void;
+  setCart: (items: CartItem[]) => void;
 }
 
 // Initial empty cart
@@ -24,6 +25,7 @@ const initialState: CartContextType = {
   removeFromCart: () => {},
   updateQuantity: () => {},
   clearCart: () => {},
+  setCart: () => {},
 };
 
 export const CartContext = createContext<CartContextType>(initialState);

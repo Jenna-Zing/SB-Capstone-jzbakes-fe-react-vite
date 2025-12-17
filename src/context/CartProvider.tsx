@@ -1,8 +1,17 @@
-import { type ReactNode, useState } from "react";
+import { type ReactNode, useState, useEffect } from "react";
 import { type CartItem, CartContext } from "./CartContext";
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [cartItems, setCartItems] = useState<CartItem[]>(() => {
+    // Initialize cart from localStorage if available
+    const savedCart = localStorage.getItem("cart");
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
+
+  // Sync cartItems to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cartItems));
+  }, [cartItems]);
 
   // Add item to cart by product id
   const addToCart = (item: CartItem) => {
@@ -51,6 +60,10 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     setCartItems([]);
   };
 
+  const setCart = (items: CartItem[]) => {
+    setCartItems(items);
+  };
+
   return (
     <CartContext.Provider
       value={{
@@ -59,6 +72,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         removeFromCart,
         updateQuantity,
         clearCart,
+        setCart,
       }}
     >
       {children}
