@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { UserContext } from "./UserContext";
-import { type User } from "../../types/types";
+import { type User } from "../types/types";
 
 interface Props {
   children: React.ReactNode; // special prop in React that represents whatever you wrap inside this component

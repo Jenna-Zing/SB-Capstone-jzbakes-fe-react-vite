@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { type UserContext as UserContextType } from "../../types/types";
+import { type UserContext as UserContextType } from "../types/types";
 
 // initial context state
 const initialState: UserContextType = {

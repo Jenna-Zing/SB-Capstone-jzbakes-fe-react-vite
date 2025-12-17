@@ -1,5 +1,5 @@
 import type { Product } from "@/pages/HomePage";
-import { fetchJson } from "./api_wrapper";
+import { fetchJson } from "./apiWrapper";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
