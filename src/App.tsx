@@ -5,6 +5,7 @@ import "./App.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import TopNavigation from "./components/TopNavigation";
 import HomePage from "./pages/HomePage";
+import CheckoutPage from "./pages/CheckoutPage";
 import OrderHistory from "./pages/OrderHistoryPage";
 import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
@@ -44,6 +45,7 @@ function App() {
           >
             <Routes>
               <Route path="/" element={<HomePage />} />
+              <Route path="/checkout" element={<CheckoutPage />} />
               <Route path="/order-history" element={<OrderHistory />} />
               <Route path="/sign-up" element={<SignupPage />} />
               <Route path="/login" element={<LoginPage />} />

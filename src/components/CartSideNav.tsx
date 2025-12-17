@@ -9,8 +9,11 @@ interface CartSidebarProps {
   onClose: () => void;
 }
 
+import { useNavigate } from "react-router-dom";
+
 export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
   const { cartItems, removeFromCart, updateQuantity, clearCart } = useCart();
+  const navigate = useNavigate();
 
   const totalCost = cartItems.reduce(
     (total, item) => total + item.cost * item.quantity,
@@ -20,6 +23,11 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
   // handle quantity change of a product (increment or decrement)
   const handleQuantityChange = (id: number, change: number) => {
     updateQuantity(id, change); // increment or decremnt based on change
+  };
+
+  const handleCheckout = () => {
+    onClose();
+    navigate("/checkout");
   };
 
   return (
@@ -99,7 +107,7 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
 
           <Button
             label="Checkout"
-            onClick={() => alert("Proceeding to checkout")}
+            onClick={handleCheckout}
           />
         </div>
       )}

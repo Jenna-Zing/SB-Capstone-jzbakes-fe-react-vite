@@ -42,21 +42,6 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         return [cartItem];
       });
 
-      // const updatedCart = prevCart
-      //   .map((cartItem) => {
-      //     if (cartItem.id === id) {
-      //       const newQuantity = cartItem.quantity + delta;
-
-      //       // if the quantity is 0 or less, remove the item from the cart
-      //       if (newQuantity <= 0) {
-      //         return null; // mark for removal
-      //       }
-      //       return { ...cartItem, quantity: newQuantity };
-      //     }
-      //     return cartItem;
-      //   })
-      //   .filter((item) => item !== null); // **remove any null entries (items with 0 quantity)
-
       return updatedCart;
     });
   };
