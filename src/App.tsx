@@ -12,6 +12,8 @@ import LoginPage from "./pages/LoginPage";
 import { UserProvider } from "./context/UserProvider";
 import { CartProvider } from "./context/CartProvider";
 import CartSidebar from "./components/CartSideNav";
+import StripeWrapper from "./components/StripeWrapper";
+import CompletionPage from "./pages/CompletionPage";
 import { useState } from "react";
 
 function App() {
@@ -45,10 +47,14 @@ function App() {
           >
             <Routes>
               <Route path="/" element={<HomePage />} />
-              <Route path="/checkout" element={<CheckoutPage />} />
               <Route path="/order-history" element={<OrderHistory />} />
               <Route path="/sign-up" element={<SignupPage />} />
               <Route path="/login" element={<LoginPage />} />
+              
+              <Route element={<StripeWrapper />}>
+                <Route path="/checkout" element={<CheckoutPage />} />
+                <Route path="/complete" element={<CompletionPage />} />
+              </Route>
             </Routes>
           </div>
         </Router>
