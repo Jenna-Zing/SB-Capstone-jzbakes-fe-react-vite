@@ -50,7 +50,7 @@ function App() {
               <Route path="/order-history" element={<OrderHistory />} />
               <Route path="/sign-up" element={<SignupPage />} />
               <Route path="/login" element={<LoginPage />} />
-              
+
               <Route element={<StripeWrapper />}>
                 <Route path="/checkout" element={<CheckoutPage />} />
                 <Route path="/complete" element={<CompletionPage />} />

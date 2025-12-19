@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import {
   PaymentElement,
   useStripe,
@@ -17,6 +17,7 @@ import { format } from "date-fns";
 import { CalendarIcon, Clock, MapPin } from "lucide-react";
 
 export default function CheckoutPage() {
+  const { clientSecret } = useOutletContext<{ clientSecret: string }>();
   const stripe = useStripe();
   const elements = useElements();
   const { cartItems } = useCart();
@@ -73,10 +74,41 @@ export default function CheckoutPage() {
 
     setIsLoading(true);
 
+    // STEP 1: Submit the form
+    const { error: submitError } = await elements.submit();
+    if (submitError) {
+      setMessage(submitError.message);
+      setIsLoading(false);
+      return;
+    }
+
+    // STEP 2: Confirm the payment
+
+    // // const response = await fetch(
+    // //   "http://localhost:8080/api/stripe/create-payment-intent",
+    // //   {
+    // //     method: "POST",
+    // //     headers: {
+    // //       "Content-Type": "application/json",
+    // //     },
+    // //     body: JSON.stringify({
+    // //       items: cartItems,
+    // //       amount: 2000, // $20.00
+    // //       currency: "usd",
+    // //       // any other data you need
+    // //     }),
+    // //   }
+    // // );
+
+    // console.log(response);
+    // const { clientSecret } = await response.json();
+
+    // TODO: test out confirmPayment
     const { error } = await stripe.confirmPayment({
       elements,
+      clientSecret,
       confirmParams: {
-        return_url: `${window.location.origin}/complete`,
+        return_url: `${window.location.origin}/complete`, // TODO:  try out different messages
         //   // Pass Pickup Details as Metadata to the Intent
         //   // This is what the Webhook will receive!
         //   payment_method_data: {

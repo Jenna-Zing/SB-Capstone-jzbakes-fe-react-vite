@@ -6,7 +6,9 @@ import useCart from "@/hooks/useCart";
 
 // Initialize Stripe outside of component
 const STRIPE_PUBLISHABLE_KEY = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
-const stripePromise = STRIPE_PUBLISHABLE_KEY ? loadStripe(STRIPE_PUBLISHABLE_KEY) : null;
+const stripePromise = STRIPE_PUBLISHABLE_KEY
+  ? loadStripe(STRIPE_PUBLISHABLE_KEY)
+  : null;
 
 export default function StripeWrapper() {
   const [clientSecret, setClientSecret] = useState("");
@@ -20,7 +22,7 @@ export default function StripeWrapper() {
     // Only attempt to fetch if there are items
     if (totalItems > 0) {
       setError(null);
-      fetch("/api/stripe/create-payment-intent", {
+      fetch("http://localhost:8080/api/stripe/create-payment-intent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ items: cartItems }),
@@ -32,22 +34,22 @@ export default function StripeWrapper() {
           return res.json();
         })
         .then((data) => {
-            if (data.clientSecret) {
-                setClientSecret(data.clientSecret);
-            } else {
-                console.error("No clientSecret returned", data);
-                setError("Failed to initialize payment. Please try again.");
-            }
+          if (data.clientSecret) {
+            setClientSecret(data.clientSecret);
+          } else {
+            console.error("No clientSecret returned", data);
+            setError("Failed to initialize payment. Please try again.");
+          }
         })
         .catch((error) => {
-            console.error("Error creating payment intent:", error);
-            setError("Error connecting to payment server.");
+          console.error("Error creating payment intent:", error);
+          setError("Error connecting to payment server.");
         });
     }
   }, [cartItems, totalItems]);
 
   const appearance = {
-    theme: 'stripe' as const,
+    theme: "stripe" as const,
   };
   const options = {
     clientSecret,
@@ -56,11 +58,12 @@ export default function StripeWrapper() {
 
   // If Stripe key is missing
   if (!stripePromise) {
-      return (
-          <div className="p-8 text-center text-red-600">
-              Error: Stripe Publishable Key is missing. Please check your environment variables.
-          </div>
-      );
+    return (
+      <div className="p-8 text-center text-red-600">
+        Error: Stripe Publishable Key is missing. Please check your environment
+        variables.
+      </div>
+    );
   }
 
   // Handle empty cart
@@ -68,7 +71,10 @@ export default function StripeWrapper() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4 p-4">
         <h1 className="text-2xl font-bold text-gray-800">Your cart is empty</h1>
-        <Link to="/" className="text-blue-600 hover:text-blue-800 font-medium hover:underline">
+        <Link
+          to="/"
+          className="text-blue-600 hover:text-blue-800 font-medium hover:underline"
+        >
           Go back to shop
         </Link>
       </div>
@@ -77,27 +83,31 @@ export default function StripeWrapper() {
 
   // Handle errors
   if (error) {
-      return (
-          <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4 p-4 text-red-600">
-              <h2 className="text-xl font-bold">Something went wrong</h2>
-              <p>{error}</p>
-              <Link to="/" className="text-blue-600 hover:underline">Return Home</Link>
-          </div>
-      )
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4 p-4 text-red-600">
+        <h2 className="text-xl font-bold">Something went wrong</h2>
+        <p>{error}</p>
+        <Link to="/" className="text-blue-600 hover:underline">
+          Return Home
+        </Link>
+      </div>
+    );
   }
 
   // Loading state
   if (!clientSecret) {
-      return (
-        <div className="flex justify-center items-center min-h-[50vh]">
-             <div className="text-gray-600 font-medium animate-pulse">Loading secure checkout...</div>
+    return (
+      <div className="flex justify-center items-center min-h-[50vh]">
+        <div className="text-gray-600 font-medium animate-pulse">
+          Loading secure checkout...
         </div>
-      );
+      </div>
+    );
   }
 
   return (
     <Elements options={options} stripe={stripePromise}>
-      <Outlet />
+      <Outlet context={{ clientSecret }} />
     </Elements>
   );
 }
